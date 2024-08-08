@@ -1,0 +1,6 @@
+Package: nonlinearreduction
+Type: Package
+Title: Non Linear Dimensional Reduction (PCA) for a Seurat Object
+Version: 0.0.1.0
+Encoding: UTF-8
+RoxygenNote: 7.3.2
