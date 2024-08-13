@@ -11,7 +11,7 @@ clusters_seurat <- function(input){
    clustering <- Seurat::RunPCA(clustering, features = Seurat::VariableFeatures(object = clustering))
    clustering <- Seurat::FindNeighbors(clustering, dims= 1:15)
    clustering <- Seurat::FindClusters(clustering, resolution = c(0.1, 0.3, 0.5, 0.7, 1))
-   saveRDS(clustering, file = "clustersperresolution.rds")
+   saveRDS(clustering, file = "clusters.rds")
 }
 
 tsne_seurat <- function(input){
