@@ -2,10 +2,11 @@
 #' 
 #' t-SNE and UMAP functions are included in this package
 #' 
-#' @param input is the output of RunPCA
+#' @param input is the output of scaling (for function clusters_seurat()). Use the output of the clusters function as input for t-SNE and UMAP functions
 #' @examples 
-#' tsne_seurat(afterclustering.rds)
+#' tsne_seurat(after_scaling.rds)
 #' @export
+# non-linear dimensionality reduction
 clusters_seurat <- function(input){
    clustering <- readRDS(input)
    clustering <- Seurat::RunPCA(clustering, features = Seurat::VariableFeatures(object = clustering))
@@ -19,10 +20,13 @@ tsne_seurat <- function(input){
    for_3d <- for_tsne
    for_tsne <- Seurat::RunTSNE(for_tsne, dims = 1:10, dim.embed =2, label = TRUE)
    
+   # load library for "element_text" to work properly
+   library(ggplot2)
+   
    new.cluster.ids <- c("Naive CD4 T", "CD14+ Mono", "Memory CD4 T", "B", "CD8 T", "FCGR3A+ Mono", "NK", "DC", "Platelet")
    names(new.cluster.ids) <- levels(for_tsne)
-   for_tsne <- RenameIdents(for_tsne, new.cluster.ids)
-   tsne_plot <- DimPlot(for_tsne, reduction = "tsne", label = TRUE) + xlab("t-SNE 1") + ylab("t-SNE 2") + theme(axis.title = element_text(size = 18)) + guides(colour = guide_legend(override.aes = list(size = 10)))
+   for_tsne <- Seurat::RenameIdents(for_tsne, new.cluster.ids)
+   tsne_plot <- Seurat::DimPlot(for_tsne, reduction = "tsne", label = TRUE) + xlab("t-SNE 1") + ylab("t-SNE 2") + theme(axis.title = element_text(size = 18)) + guides(colour = guide_legend(override.aes = list(size = 10)))
    
    tsne_plot <- plotly::ggplotly(tsne_plot)
    
@@ -45,7 +49,7 @@ tsne_seurat <- function(input){
                                color = ~seurat_clusters,
                                type = "scatter3d", 
                                mode = "markers", 
-                               marker = list(size = 5, width=2),
+                               marker = list(size = 5, width=2), # controls size of points
                                text=~label, 
                                hoverinfo="text")
    
@@ -57,11 +61,14 @@ umap_seurat <- function(input){
    for_umap <- readRDS(input)
    for_3d <- for_umap
    
+   # load library for "element_text" to work properly
+   library(ggplot2)
+   
    umap <- Seurat::RunUMAP(for_umap, dims = 1:10, n.components = 3L)
    new.cluster.ids <- c("Naive CD4 T", "CD14+ Mono", "Memory CD4 T", "B", "CD8 T", "FCGR3A+ Mono", "NK", "DC", "Platelet")
    names(new.cluster.ids) <- levels(umap)
-   umap <- RenameIdents(umap, new.cluster.ids)
-   umap_plot <- DimPlot(umap, reduction = "umap", label = TRUE) + xlab("UMAP 1") + ylab("UMAP 2") + theme(axis.title = element_text(size = 18)) + guides(colour = guide_legend(override.aes = list(size = 10)))
+   umap <- Seurat::RenameIdents(umap, new.cluster.ids)
+   umap_plot <- Seurat::DimPlot(umap, reduction = "umap", label = TRUE) + xlab("UMAP 1") + ylab("UMAP 2") + theme(axis.title = element_text(size = 18)) + guides(colour = guide_legend(override.aes = list(size = 10)))
    
    umap_plot <- plotly::ggplotly(umap_plot)
    htmltools::save_html(umap_plot, file = "umap.html")
@@ -83,4 +90,3 @@ umap_seurat <- function(input){
    
    htmltools::save_html(fig, file = "umap_3dplot.html")
 }
-
