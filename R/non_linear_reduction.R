@@ -22,6 +22,7 @@ tsne_seurat <- function(input){
    
    # load library for "element_text" to work properly
    library(ggplot2)
+   library(plotly)
    
    new.cluster.ids <- c("Naive CD4 T", "CD14+ Mono", "Memory CD4 T", "B", "CD8 T", "FCGR3A+ Mono", "NK", "DC", "Platelet")
    names(new.cluster.ids) <- levels(for_tsne)
@@ -30,7 +31,7 @@ tsne_seurat <- function(input){
    
    tsne_plot <- plotly::ggplotly(tsne_plot)
    
-   htmltools::save_html(tsne_plot, file = "tsne.html")
+   htmltools::save_html(tsne_plot, file = "tsne_2dplot.html")
    
    
    #for 3D plots
@@ -72,7 +73,7 @@ umap_seurat <- function(input){
    umap_plot <- Seurat::DimPlot(umap, reduction = "umap", label = TRUE) + xlab("UMAP 1") + ylab("UMAP 2") + theme(axis.title = element_text(size = 18)) + guides(colour = guide_legend(override.aes = list(size = 10)))
    
    umap_plot <- plotly::ggplotly(umap_plot)
-   htmltools::save_html(umap_plot, file = "umap.html")
+   htmltools::save_html(umap_plot, file = "umap_2dplot.html")
    
    # for 3d plot
    for_3d <- Seurat::RunUMAP(for_3d, dims = 1:10, n.components = 3L)
