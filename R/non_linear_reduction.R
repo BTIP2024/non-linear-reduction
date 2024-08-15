@@ -63,6 +63,7 @@ umap_seurat <- function(input){
    
    # load library for "element_text" to work properly
    library(ggplot2)
+   library(plotly)
    
    umap <- Seurat::RunUMAP(for_umap, dims = 1:10, n.components = 3L)
    new.cluster.ids <- c("Naive CD4 T", "CD14+ Mono", "Memory CD4 T", "B", "CD8 T", "FCGR3A+ Mono", "NK", "DC", "Platelet")
