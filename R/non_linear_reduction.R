@@ -8,16 +8,31 @@
 #' @export
 # non-linear dimensionality reduction
 clusters_seurat <- function(input){
-   clustering <- readRDS(input)
+   if(!(tools::file_ext(input)) == "rds") {
+      return("Input file should be an rds file")
+   } else if(tools::file_ext(input) == "rds") {
+      clustering <- readRDS(input)
+      
+      if(class(clustering) != "Seurat") {
+         return("File is not a seurat object")
+      } else {
    clustering <- Seurat::RunPCA(clustering, features = Seurat::VariableFeatures(object = clustering))
    clustering <- Seurat::FindNeighbors(clustering, dims= 1:15)
    clustering <- Seurat::FindClusters(clustering, resolution = c(0.1, 0.3, 0.5, 0.7, 1))
    saveRDS(clustering, file = "clusters.rds")
-}
+      }
+   }
+   }
 
 tsne_seurat <- function(input){
-   for_tsne <- readRDS(input)
-   for_3d <- for_tsne
+   if(!(tools::file_ext(input)) == "rds") {
+      return("Input file should be an rds file")
+   } else if(tools::file_ext(input) == "rds") {
+      for_tsne <- readRDS(input)
+      
+      if(class(for_tsne) != "Seurat") {
+         return("File is not a seurat object")
+      } else {
    for_tsne <- Seurat::RunTSNE(for_tsne, dims = 1:10, dim.embed =2, label = TRUE)
    
    # load library for "element_text" to work properly
@@ -56,10 +71,19 @@ tsne_seurat <- function(input){
    
    htmltools::save_html(plotin3d, file = "tsne_3dplot.html")
    
-}
+      }
+   }
+   }
 
 umap_seurat <- function(input){
-   for_umap <- readRDS(input)
+   if(!(tools::file_ext(input)) == "rds") {
+      return("Input file should be an rds file")
+   } else if(tools::file_ext(input) == "rds") {
+      for_umap <- readRDS(input)
+      
+      if(class(for_umap) != "Seurat") {
+         return("File is not a seurat object")
+      } else {
    for_3d <- for_umap
    
    # load library for "element_text" to work properly
@@ -91,4 +115,6 @@ umap_seurat <- function(input){
                   hoverinfo="text")
    
    htmltools::save_html(fig, file = "umap_3dplot.html")
-}
+      }
+   }
+   }
